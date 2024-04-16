@@ -3,18 +3,12 @@
 An **open-source** Software Management Software
 
 
-## Installation and setup
+## Setup and use
 
-Commands:
 ```
-- python -m pip install Django
-- django-admin startproject mysite
-- python manage.py runserver
-- python manage.py startapp app
-- python -m pip install django-tailwind
-- python -m pip install 'django-tailwind[reload]'
-- python manage.py tailwind install
+- run setup.sh (give exec permission)
 - python manage.py tailwind start
+- python manage.py runserver
 
 ```
 
