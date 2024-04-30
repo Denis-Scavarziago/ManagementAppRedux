@@ -3,28 +3,28 @@ from .models import Projects, Tasks, Users
 
 class UserForm(forms.ModelForm):
         
-    username = forms.CharField(
+    Username = forms.CharField(
         widget=forms.TextInput(attrs={
             'class': 'block w-full bg-FormGray h-12 rounded-md my-1',
             'placeholder': 'Title'
         })
     )
 
-    email = forms.EmailField(
+    Email = forms.EmailField(
         widget=forms.EmailInput(attrs={
             'class': 'block w-full bg-FormGray h-12 rounded-md my-1',
             'placeholder': 'Title'
         })
     )
 
-    password = forms.CharField(
+    Password = forms.CharField(
     widget=forms.PasswordInput(attrs={
         'class': 'block w-full bg-FormGray h-12 rounded-md my-1',
         'placeholder': 'Password'
     })
     )
 
-    is_staff = forms.BooleanField(label='Is Staff?', required=False)
+    Manager = forms.BooleanField(label='Are you a manager?', required=True)
 
 class ProjectForm(forms.ModelForm):
     Title = forms.CharField(
