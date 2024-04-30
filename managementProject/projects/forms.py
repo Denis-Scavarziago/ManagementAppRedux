@@ -1,5 +1,30 @@
 from django import forms
-from .models import Projects, Tasks
+from .models import Projects, Tasks, Users
+
+class UserForm(forms.ModelForm):
+        
+    username = forms.CharField(
+        widget=forms.TextInput(attrs={
+            'class': 'block w-full bg-FormGray h-12 rounded-md my-1',
+            'placeholder': 'Title'
+        })
+    )
+
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={
+            'class': 'block w-full bg-FormGray h-12 rounded-md my-1',
+            'placeholder': 'Title'
+        })
+    )
+
+    password = forms.CharField(
+    widget=forms.PasswordInput(attrs={
+        'class': 'block w-full bg-FormGray h-12 rounded-md my-1',
+        'placeholder': 'Password'
+    })
+    )
+
+    is_staff = forms.BooleanField(label='Is Staff?', required=False)
 
 class ProjectForm(forms.ModelForm):
     Title = forms.CharField(
@@ -21,7 +46,7 @@ class ProjectForm(forms.ModelForm):
         widget=forms.DateInput(attrs={
             'class': 'w-full bg-FormGray  h-12 rounded-md my-1',
             'placeholder': 'Start Date',
-            'type': 'date'  # Asegura que el tipo de entrada sea 'date' para compatibilidad con HTML5
+            'type': 'date' 
         })
     )
 
@@ -85,7 +110,7 @@ class TaskForm(forms.ModelForm):
         widget=forms.DateInput(attrs={
             'class': 'w-full bg-FormGray  h-12 rounded-md my-1',
             'placeholder': 'Start Date',
-            'type': 'date'  # Asegura que el tipo de entrada sea 'date' para compatibilidad con HTML5
+            'type': 'date'
         })
     )
 
