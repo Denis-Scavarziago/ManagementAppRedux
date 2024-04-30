@@ -1,12 +1,26 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 
-from .forms import ProjectForm, TaskForm
+from .forms import UserForm, ProjectForm, TaskForm
 from .models import Projects, Tasks
 
 
 def index(request):
     return render(request, 'index.html')
+
+def register(request):
+    if request.method == 'GET':
+        form = UserForm()  # Initialize the form
+        return render(request, 'register.html', {'form': form})
+    
+    elif request.method == 'POST':
+        form = UserForm(request.POST)
+        if form.is_valid():
+            form.save()                                                                                 
+            return redirect('projects')                                           
+        else:     
+            print(form.errors)                                                                                      
+            return render(request, 'register.html', {'error': "form error"})
 
 def projects(request):
 

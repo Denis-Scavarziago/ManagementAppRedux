@@ -62,3 +62,14 @@ urlpatterns = [
 - python manage.py makemigrations
 - python manage.py migrate
 ```
+
+## TO DO
+- autenticazione
+    - registrazione utente con verifica mail
+        - salva account ma momentaneamente inutilizzabile, genera token e salva in database
+        - crea link utilizzando dominio+token
+        - manda all'email inserita nel form il link
+        - catch della request dal link e verifica del token del link con quello salvato nel db
+        - se positivo entro 24 ore attiva password e redirecta al login, altrimenti elimina riga guardando l'expiration time e la data di creazione
+
+    - autenticazione e sessione (stateful)
