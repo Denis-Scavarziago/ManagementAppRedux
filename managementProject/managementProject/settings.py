@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -131,3 +133,9 @@ TAILWIND_APP_NAME = 'projects'
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
+
+DOMAIN  = "https://organic-fortnight-jwgv4px7j7x2j5jj-8000.app.github.dev"
+EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
+SENDGRID_API_KEY = config('APIKEY')
+SENDER_EMAIL = config('SENDER_EMAIL')
+

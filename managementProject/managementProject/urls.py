@@ -19,8 +19,9 @@ from django.urls import include, path
 from projects import views
 
 urlpatterns = [
-    path("", views.index),
+    path("", views.index, name='index'),
     path('register/', views.register, name='register'),
+    path('activate/<str:tokenURL>/', views.activate, name='activate'),
     path('projects/', views.projects, name='projects'),
     path('projects/<int:project_id>/', views.project, name='project'),
     path("__reload__/", include("django_browser_reload.urls")),

@@ -1,8 +1,14 @@
-from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from django.contrib.auth.hashers import make_password
+from django.conf import settings
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+import secrets
 
 from .forms import UserForm, ProjectForm, TaskForm
-from .models import Projects, Tasks
+from .models import Projects, Tasks, Users
+
 
 
 def index(request):
@@ -16,11 +22,42 @@ def register(request):
     elif request.method == 'POST':
         form = UserForm(request.POST)
         if form.is_valid():
-            form.save()                                                                                 
+            hashed_password = make_password(form.cleaned_data['Password'])
+            token = secrets.token_urlsafe(30)        # Token for verification
+            user_instance = form.save(commit=False)  # Get the unsaved model instance
+            user_instance.Password = hashed_password # Update with hashed password
+            user_instance.Token = token
+            user_instance.save()              
+            activation_link = f"{settings.DOMAIN}/activate/{token}"
+
+            message = Mail(
+                from_email=settings.SENDER_EMAIL,
+                to_emails=user_instance.Email,
+                subject='Sending with Twilio SendGrid is Fun',
+                html_content=activation_link)
+            try:
+                sg = SendGridAPIClient(settings.SENDGRID_API_KEY)
+                sg.send(message)
+            except Exception as e:
+                print(e.message)
+
             return redirect('projects')                                           
         else:     
             print(form.errors)                                                                                      
             return render(request, 'register.html', {'error': "form error"})
+        
+def activate(request, tokenURL):
+    try:
+        user = Users.objects.get(Token=tokenURL)
+        user.Verified = True
+        user.Token = ''
+        # Save the changes to the database
+        user.save()
+        return redirect('index')  # Assuming 'index' is the name of your index view
+    except Users.DoesNotExist:
+        return HttpResponse("Invalid activation link", status=404)
+
+
 
 def projects(request):
 
@@ -47,7 +84,7 @@ def project(request, project_id):
             'id': task.id,
             'name': task.Title,
             'start': task.StartDate.strftime('%Y-%m-%d'),  # Format date as 'YYYY-MM-DD'
-            'end': task.EndDate.strftime('%Y-%m-%d'),      # Format date as 'YYYY-MM-DD'
+            'end': task.EndDate.strftime('%Y-%m-%d'),     
         }
         htmlTasks.append(taskData)
     print(htmlTasks)

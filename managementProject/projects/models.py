@@ -12,6 +12,8 @@ class Users(models.Model):
     Manager = models.BooleanField()
     CreatedAt = models.DateField(default=timezone.now)
     Token = models.CharField(max_length=100, blank=True)
+    Verified = models.BooleanField(default=False)  # New field to track account verification status
+    
 
     def __str__(self):
         return self.Username 
