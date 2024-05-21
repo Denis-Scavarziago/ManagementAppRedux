@@ -1,7 +1,11 @@
-from django.http import HttpResponse
+import datetime
+from django.urls import reverse
+from django.utils import timezone
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import make_password
 from django.conf import settings
+import jwt
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 import secrets
@@ -53,7 +57,17 @@ def activate(request, tokenURL):
         user.Token = ''
         # Save the changes to the database
         user.save()
-        return redirect('index')  # Assuming 'index' is the name of your index view
+        payload = {
+        'user_id': user.PKUser,
+        'username': user.Username,
+        'email': user.Email,
+        'manager': user.Manager,
+        'verified': user.Verified
+        }
+        token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
+        response = HttpResponseRedirect(reverse('projects'))
+        response.set_cookie('jwt_token', token, expires=timezone.now() + datetime.timedelta(hours=24))
+        return response
     except Users.DoesNotExist:
         return HttpResponse("Invalid activation link", status=404)
 
